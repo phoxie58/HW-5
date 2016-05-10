@@ -1,6 +1,6 @@
 ---
 title: "MATH 216 Homework 5"
-author: "WRITE YOUR NAME HERE"
+author: "Phil Hoxie"
 output: html_document
 ---
 
@@ -9,7 +9,7 @@ output: html_document
 
 Please indicate
 
-* Who you collaborated with:
+* Who you collaborated with: Christian Lehner
 * Roughly how much time you spent on this HW:
 * What gave you the most trouble:
 * Any comments you have: 
@@ -28,7 +28,7 @@ a "single-file" Shiny app based on file `App.R`
 * Install all necessary packages on your Middlebury Shiny server account
 following the instructions given in Lec16 Shiny.
 * Upload your app to the Middlebury Shiny server and replace the NHL link with
-the link for your app [here](https://www.nhl.com/), so that when you Knit the 
+the link for your app [https://phoxie58.shinyapps.io/natural_law/](https://www.nhl.com/), so that when you Knit the 
 document a working hyperlink shows.
 
 Hints:
@@ -52,3 +52,68 @@ if(text == "blah1"){
 value
 ```
 
+My code: 
+```{r, results='hide'}
+library(dplyr)
+library(stringr)
+library(tm)
+library(wordcloud)
+library(SnowballC)
+
+locke <-
+  readLines("locke.2.treatise.on.gov", encoding="UTF-8") %>%
+  as.character()
+
+aquinas <-
+  readLines("aquinas.treatise.on.law", encoding="UTF-8") %>%
+  as.character()
+
+hobbes <-
+  readLines("hobbes.leviathan", encoding="UTF-8") %>%
+  as.character()
+
+locke <- locke %>%
+  tolower() %>%
+  removeNumbers() %>%
+  removePunctuation() %>%
+  removeWords(stopwords("english")) %>%
+  stemDocument() %>%
+  stripWhitespace()
+
+hobbes <- hobbes %>%
+  tolower() %>%
+  removeNumbers() %>%
+  removePunctuation() %>%
+  removeWords(stopwords("english")) %>%
+  stemDocument() %>%
+  stripWhitespace()
+
+aquinas <- aquinas %>%
+  tolower() %>%
+  removeNumbers() %>%
+  removePunctuation() %>%
+  removeWords(stopwords("english")) %>%
+  stemDocument() %>%
+  stripWhitespace()
+```
+```{r}
+locke <- VectorSource(locke) %>% 
+  Corpus()
+wordcloud(locke, scale=c(5,0.5), max.words=25, random.order=FALSE,
+          rot.per=0.35, use.r.layout=FALSE, colors=brewer.pal(8, "BuPu"))
+
+```
+```{r}
+hobbes <- VectorSource(hobbes) %>% 
+  Corpus()
+wordcloud(hobbes, scale=c(5,0.5), max.words=25, random.order=FALSE,
+          rot.per=0.35, use.r.layout=FALSE, colors=brewer.pal(8, "YlOrRd"))
+
+```
+```{r}
+aquinas <- VectorSource(aquinas) %>% 
+  Corpus()
+wordcloud(aquinas, scale=c(5,0.5), max.words=25, random.order=FALSE,
+          rot.per=0.35, use.r.layout=FALSE, colors=brewer.pal(8, "RdPu"))
+
+```
